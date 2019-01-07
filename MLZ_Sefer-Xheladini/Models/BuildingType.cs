@@ -7,5 +7,7 @@ namespace MLZ_Sefer-Xheladini.Models
 {
     public class BuildingType
 {
+    public int BuildingTypeId { get; set; }
+    public string Type { get; set; }
 }
 }

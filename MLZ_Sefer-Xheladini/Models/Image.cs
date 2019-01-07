@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace MLZ_Sefer-Xheladini.Models
 {
-    public class UserType
+    public class Image
 {
-    public int UserTypeId { get; set; }
-    public string Type { get; set; }
+    public int ImageId { get; set; }
+
 }
 }

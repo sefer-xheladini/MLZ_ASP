@@ -7,17 +7,24 @@ namespace MLZ_Sefer-Xheladini.Models
 {
     public class Building
 {
-    public BuildingType buildingType { get; set; }
-    public int Beds { get; set; }
+    public int BuildingId { get; set; }
+    public string Title { get; set; }
+    public string City { get; set; }
+    public string ZipCode { get; set; }
+    public BuildingType BuildingType { get; set; }
+    public int BedCount { get; set; }
     public string Condition { get; set; }
-    public double Price { get; set; }
-    public bool Wlan { get; set; }
+    public double PricePerDay { get; set; }
+    public bool HasWlan { get; set; }
     public bool WlanFree { get; set; }
     public double WlanPrice { get; set; }
-    public bool Parking { get; set; }
+    public bool HasParking { get; set; }
     public bool ParkingFree { get; set; }
     public double ParkingPrice { get; set; }
     public double Space { get; set; }
-    public bool Balkony { get; set; }
+    public bool HasBalkony { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; }
+    public bool IsActive { get; set; }
 }
 }
