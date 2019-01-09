@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using MLZ_Sefer_Xheladini.Models;
 
 namespace MLZ_Sefer_Xheladini
 {
@@ -32,6 +34,9 @@ namespace MLZ_Sefer_Xheladini
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<MLZ_Sefer_XheladiniContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MLZ_Sefer_XheladiniContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

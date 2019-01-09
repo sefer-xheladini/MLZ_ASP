@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MLZ_Sefer-Xheladini.Models
+namespace MLZ_Sefer_Xheladini.Models
 {
     public class Building
 {
@@ -16,15 +16,18 @@ namespace MLZ_Sefer-Xheladini.Models
     public string Condition { get; set; }
     public double PricePerDay { get; set; }
     public bool HasWlan { get; set; }
-    public bool WlanFree { get; set; }
     public double WlanPrice { get; set; }
     public bool HasParking { get; set; }
-    public bool ParkingFree { get; set; }
     public double ParkingPrice { get; set; }
     public double Space { get; set; }
     public bool HasBalkony { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
     public bool IsActive { get; set; }
+    public int ImageId { get; set; }
+    public Image Image { get; set; }
+    public ICollection<Image> ImageList { get; set; }
+
+
 }
 }

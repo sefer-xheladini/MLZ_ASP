@@ -1,0 +1,119 @@
+﻿@model IEnumerable<MLZ_Sefer_Xheladini.Models.Building>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ZipCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BedCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Condition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PricePerDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasWlan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WlanPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasParking)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParkingPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Space)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasBalkony)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ZipCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BedCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Condition)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PricePerDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasWlan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WlanPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasParking)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParkingPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Space)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasBalkony)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Image.ImageId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BuildingId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BuildingId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BuildingId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

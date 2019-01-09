@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MLZ_Sefer-Xheladini.Models
+namespace MLZ_Sefer_Xheladini.Models
 {
     public class UserType
 {
