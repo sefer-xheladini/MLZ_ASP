@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MLZ_Sefer_Xheladini.Models;
+using Booking2.Models;
 
-namespace MLZ_Sefer_Xheladini.Controllers
+namespace Booking2.Controllers
 {
     public class BuildingsController : Controller
     {
-        private readonly MLZ_Sefer_XheladiniContext _context;
+        private readonly Booking2Context _context;
 
-        public BuildingsController(MLZ_Sefer_XheladiniContext context)
+        public BuildingsController(Booking2Context context)
         {
             _context = context;
         }
@@ -21,8 +21,8 @@ namespace MLZ_Sefer_Xheladini.Controllers
         // GET: Buildings
         public async Task<IActionResult> Index()
         {
-            var mLZ_Sefer_XheladiniContext = _context.Building.Include(b => b.Image).Include(b => b.User);
-            return View(await mLZ_Sefer_XheladiniContext.ToListAsync());
+            var booking2Context = _context.Building.Include(b => b.BuildingType).Include(b => b.User).Include(b => b.ImageList);
+            return View(await booking2Context.ToListAsync());
         }
 
         // GET: Buildings/Details/5
@@ -34,8 +34,9 @@ namespace MLZ_Sefer_Xheladini.Controllers
             }
 
             var building = await _context.Building
-                .Include(b => b.Image)
+                .Include(b => b.BuildingType)
                 .Include(b => b.User)
+                .Include(b => b.ImageList)
                 .FirstOrDefaultAsync(m => m.BuildingId == id);
             if (building == null)
             {
@@ -48,8 +49,8 @@ namespace MLZ_Sefer_Xheladini.Controllers
         // GET: Buildings/Create
         public IActionResult Create()
         {
-            ViewData["ImageId"] = new SelectList(_context.Set<Image>(), "ImageId", "ImageId");
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "UserId", "UserId");
+            ViewData["BuildingTypeId"] = new SelectList(_context.Set<BuildingType>(), "BuildingTypeId", "BuildingTypeId");
+            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId");
             return View();
         }
 
@@ -58,7 +59,7 @@ namespace MLZ_Sefer_Xheladini.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BuildingId,Title,City,ZipCode,BedCount,Condition,PricePerDay,HasWlan,WlanPrice,HasParking,ParkingPrice,Space,HasBalkony,UserId,IsActive")] Building building, List<Microsoft.AspNetCore.Http.IFormFile> files)
+        public async Task<IActionResult> Create([Bind("BuildingId,Title,City,ZipCode,BedCount,Condition,PricePerDay,HasWlan,WlanPrice,HasParking,ParkingPrice,Space,HasBalkony,IsActive,BuildingTypeId,UserId")] Building building, List<Microsoft.AspNetCore.Http.IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -85,8 +86,8 @@ namespace MLZ_Sefer_Xheladini.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImageId"] = new SelectList(_context.Set<Image>(), "ImageId", "ImageId", building.ImageId);
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "UserId", "UserId", building.UserId);
+            ViewData["BuildingTypeId"] = new SelectList(_context.Set<BuildingType>(), "BuildingTypeId", "BuildingTypeId", building.BuildingTypeId);
+            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", building.UserId);
             return View(building);
         }
 
@@ -103,8 +104,8 @@ namespace MLZ_Sefer_Xheladini.Controllers
             {
                 return NotFound();
             }
-            ViewData["ImageId"] = new SelectList(_context.Set<Image>(), "ImageId", "ImageId", building.ImageId);
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "UserId", "UserId", building.UserId);
+            ViewData["BuildingTypeId"] = new SelectList(_context.Set<BuildingType>(), "BuildingTypeId", "BuildingTypeId", building.BuildingTypeId);
+            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", building.UserId);
             return View(building);
         }
 
@@ -113,7 +114,7 @@ namespace MLZ_Sefer_Xheladini.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BuildingId,Title,City,ZipCode,BedCount,Condition,PricePerDay,HasWlan,WlanPrice,HasParking,ParkingPrice,Space,HasBalkony,UserId,IsActive,ImageId")] Building building)
+        public async Task<IActionResult> Edit(int id, [Bind("BuildingId,Title,City,ZipCode,BedCount,Condition,PricePerDay,HasWlan,WlanPrice,HasParking,ParkingPrice,Space,HasBalkony,IsActive,BuildingTypeId,UserId")] Building building)
         {
             if (id != building.BuildingId)
             {
@@ -140,8 +141,8 @@ namespace MLZ_Sefer_Xheladini.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ImageId"] = new SelectList(_context.Set<Image>(), "ImageId", "ImageId", building.ImageId);
-            ViewData["UserId"] = new SelectList(_context.Set<User>(), "UserId", "UserId", building.UserId);
+            ViewData["BuildingTypeId"] = new SelectList(_context.Set<BuildingType>(), "BuildingTypeId", "BuildingTypeId", building.BuildingTypeId);
+            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", building.UserId);
             return View(building);
         }
 
@@ -154,7 +155,7 @@ namespace MLZ_Sefer_Xheladini.Controllers
             }
 
             var building = await _context.Building
-                .Include(b => b.Image)
+                .Include(b => b.BuildingType)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.BuildingId == id);
             if (building == null)

@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MLZ_Sefer_Xheladini.Models
+namespace Booking2.Models
 {
     public class Building
 {
-    public int BuildingId { get; set; }
+    public int BuildingId { get; set;}
     public string Title { get; set; }
     public string City { get; set; }
     public string ZipCode { get; set; }
-    public BuildingType BuildingType { get; set; }
     public int BedCount { get; set; }
     public string Condition { get; set; }
     public double PricePerDay { get; set; }
@@ -21,11 +20,14 @@ namespace MLZ_Sefer_Xheladini.Models
     public double? ParkingPrice { get; set; }
     public double Space { get; set; }
     public bool HasBalkony { get; set; }
+    public bool IsActive { get; set; }
+
+    public int BuildingTypeId { get; set; }
+    public BuildingType BuildingType { get; set; }
+
     public int UserId { get; set; }
     public User User { get; set; }
-    public bool IsActive { get; set; }
-    public int? ImageId { get; }
-    public Image Image { get; set; }
+
     public ICollection<Image> ImageList { get; set; }
 
 

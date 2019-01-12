@@ -19,5 +19,7 @@ namespace MLZ_Sefer_Xheladini.Models
         public DbSet<MLZ_Sefer_Xheladini.Models.User> User { get; set; }
 
         public DbSet<MLZ_Sefer_Xheladini.Models.Rent> Rent { get; set; }
+
+        public DbSet<MLZ_Sefer_Xheladini.Models.Image> Image { get; set; }
     }
 }
