@@ -8,4 +8,4 @@ Values ('Hotel'), ('Apartment'), ('Hostel');
 
 SELECT * FROM BuildingType;
 
-SELECT * FROM User;
+SELECT * FROM Rent;

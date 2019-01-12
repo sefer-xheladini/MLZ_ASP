@@ -12,12 +12,6 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RentId" />
-            <div class="form-group">
-                <label asp-for="BuildingId" class="control-label"></label>
-                <select asp-for="BuildingId" class="form-control" asp-items="ViewBag.BuildingId"></select>
-                <span asp-validation-for="BuildingId" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
@@ -25,18 +19,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="From" class="control-label"></label>
-                <input asp-for="From" class="form-control" />
+                <input asp-for="From" class="form-control" type="date" onchange="calculatePrice()" />
                 <span asp-validation-for="From" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="To" class="control-label"></label>
-                <input asp-for="To" class="form-control" />
+                <input asp-for="To" class="form-control" type="date" onchange="calculatePrice()" />
                 <span asp-validation-for="To" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="PricePerDays" class="control-label"></label>
-                <input asp-for="PricePerDays" class="form-control" />
-                <span asp-validation-for="PricePerDays" class="text-danger"></span>
+                <input type="number" readonly id="PricePerDays" name="PricePerDays" class="form-control"></input>
             </div>
             <div class="form-group">
                 <div class="checkbox">
@@ -59,3 +52,30 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+@*Calculates the Price for the specified Days*@
+<script type="text/javascript">
+    function calculatePrice() {
+        var from = document.getElementById("From").value;
+        var to = document.getElementById("To").value;
+        if (from == null || from == "" || to == null || to == "") {
+            document.getElementById("PricePerDays").innerHTML = 0;
+            document.getElementById("PricePerDays").value = 0;
+        } else {
+            from = new Date(from);
+            to = new Date(to);
+            var timeDiff = Math.abs(to.getTime() - from.getTime());
+            var diffDay = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            var result = 0;
+            @{ 
+                    var building = ViewData["Building"] as Building;
+                <text>
+                    result = diffDay* @building.PricePerDay;
+               </text>
+                }
+            document.getElementById("PricePerDays").innerHTML = result;
+            document.getElementById("PricePerDays").value = result;
+            
+        }
+    }
+</script>

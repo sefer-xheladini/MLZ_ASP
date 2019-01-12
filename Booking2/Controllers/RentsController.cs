@@ -74,19 +74,15 @@ namespace Booking2.Controllers
         // GET: Rents/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var rent = await _context.Rent.FindAsync(id);
-            if (rent == null)
-            {
-                return NotFound();
-            }
-            ViewData["BuildingId"] = new SelectList(_context.Building, "BuildingId", "BuildingId", rent.BuildingId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", rent.UserId);
-            return View(rent);
+            var building = await _context.Building
+                .Include(b => b.BuildingType)
+                .Include(b => b.User)
+                .Include(b => b.ImageList)
+                .FirstOrDefaultAsync(m => m.BuildingId == id);
+            ViewData["Building"] = building;
+            ViewData["BuildingId"] = new SelectList(_context.Building, "BuildingId", "BuildingId");
+            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId");
+            return View();
         }
 
         // POST: Rents/Edit/5
