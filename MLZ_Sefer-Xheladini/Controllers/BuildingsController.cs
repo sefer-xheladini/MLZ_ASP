@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MLZ_Sefer_Xheladini.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using ZNetCS.AspNetCore.Authentication.Basic;
+using ZNetCS.AspNetCore.Authentication.Basic.Events;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MLZ_Sefer_Xheladini.Controllers
 {
@@ -19,6 +24,7 @@ namespace MLZ_Sefer_Xheladini.Controllers
         }
 
         // GET: Buildings
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var mLZ_Sefer_XheladiniContext = _context.Building.Include(b => b.Image).Include(b => b.User);

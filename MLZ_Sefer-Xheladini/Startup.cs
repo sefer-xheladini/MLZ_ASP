@@ -10,6 +10,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using MLZ_Sefer_Xheladini.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using ZNetCS.AspNetCore.Authentication.Basic;
+using ZNetCS.AspNetCore.Authentication.Basic.Events;
 
 namespace MLZ_Sefer_Xheladini
 {
@@ -25,6 +29,42 @@ namespace MLZ_Sefer_Xheladini
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+  services
+    .AddAuthentication(BasicAuthenticationDefaults.AuthenticationScheme)
+    .AddBasicAuthentication(
+      options =>
+      {
+        options.Realm = "My Application";
+        options.Events = new BasicAuthenticationEvents
+        {
+          OnValidatePrincipal = context =>
+          {
+            if ((context.UserName.ToLower() == "name") 
+                    && (context.Password == "password"))
+            {
+              var claims = new List<Claim>
+              {
+                new Claim(ClaimTypes.Name, 
+                          context.UserName, 
+                          context.Options.ClaimsIssuer)
+              };
+ 
+              var ticket = new AuthenticationTicket(
+                new ClaimsPrincipal(new ClaimsIdentity(
+                  claims, 
+                  BasicAuthenticationDefaults.AuthenticationScheme)),
+                new Microsoft.AspNetCore.Authentication.AuthenticationProperties(),
+                BasicAuthenticationDefaults.AuthenticationScheme);
+ 
+              return Task.FromResult(AuthenticateResult.Success(ticket));
+            }
+ 
+            return Task.FromResult(AuthenticateResult.Fail("Authentication failed."));
+          }
+        };
+      });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -42,6 +82,8 @@ namespace MLZ_Sefer_Xheladini
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            
+  app.UseAuthentication();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

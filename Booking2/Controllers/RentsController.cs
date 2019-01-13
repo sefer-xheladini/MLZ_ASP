@@ -6,9 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Booking2.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Threading;
 
 namespace Booking2.Controllers
 {
+    [Authorize]
     public class RentsController : Controller
     {
         private readonly Booking2Context _context;
@@ -21,7 +25,7 @@ namespace Booking2.Controllers
         // GET: Rents
         public async Task<IActionResult> Index()
         {
-            var booking2Context = _context.Rent.Include(r => r.Building).Include(r => r.User);
+            var booking2Context = _context.Rent.Include(r => r.Building).Include(r => r.User);//.Where(r => r.Building.UserId == currentUser.UserId);
             return View(await booking2Context.ToListAsync());
         }
 
@@ -125,38 +129,9 @@ namespace Booking2.Controllers
             return View("Views/Buildings/Index.cshtml");
         }
 
-        // GET: Rents/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+       
 
-            var rent = await _context.Rent
-                .Include(r => r.Building)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.RentId == id);
-            if (rent == null)
-            {
-                return NotFound();
-            }
-
-            return View(rent);
-        }
-
-        // POST: Rents/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var rent = await _context.Rent.FindAsync(id);
-            _context.Rent.Remove(rent);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> CheckAvailability(DateTime fromDate, DateTime toDate)
+        public async Task<IActionResult> CheckAvailability(DateTime fromDate, DateTime toDate, int buildingId)
         {
             if (fromDate > toDate)
             {
@@ -171,7 +146,7 @@ namespace Booking2.Controllers
                 allRequestedDates.Add(date);
             }
 
-            List<Rent> rents = _context.Rent.ToList();
+            List<Rent> rents = _context.Rent.Where(r => r.BuildingId == buildingId).ToList();
             foreach(var rent in rents)
             {
                 for (DateTime date = rent.From; date <= rent.To; date = date.AddDays(1))

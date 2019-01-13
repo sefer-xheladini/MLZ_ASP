@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Booking2.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Booking2.Controllers
 {

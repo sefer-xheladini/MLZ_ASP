@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Booking2.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Booking2.Controllers
 {
@@ -151,6 +153,65 @@ namespace Booking2.Controllers
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult UserLogin()
+        {
+
+            return View("Login");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserLogin([Bind] User user)
+        {
+            ModelState.Remove("Firstname");
+            ModelState.Remove("Lastname");
+
+            if (ModelState.IsValid)
+            {
+                string LoginStatus = this.ValidateLogin(user);
+
+                if (LoginStatus == "Success")
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.UserId.ToString())
+                    };
+                    ClaimsIdentity userIdentity = new ClaimsIdentity(claims, "login");
+                    ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
+
+                    await HttpContext.SignInAsync(principal);
+                    return RedirectToAction("Index", "Buildings");
+                }
+                else
+                {
+                    TempData["UserLoginFailed"] = "Login Failed.Please enter correct credentials";
+                    return View("Login");
+                }
+            }
+            else
+                return View("Login");
+
+        }
+
+        //To Validate the login  
+        public string ValidateLogin(User user)
+        {
+
+            User currentUser = _context.User.Where(u => u.Email == user.Email).FirstOrDefault();
+            //Only Admin user can access
+            if (currentUser.Password != user.Password || currentUser.UserTypeId != 1)
+            {
+                return "Failed";
+            }
+            else
+            {
+                return "Success";
+            }
+
+
         }
 
         private bool UserExists(int id)
