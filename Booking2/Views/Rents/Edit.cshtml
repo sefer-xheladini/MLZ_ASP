@@ -31,15 +31,12 @@
                 <label asp-for="PricePerDays" class="control-label"></label>
                 <input type="number" readonly id="PricePerDays" name="PricePerDays" class="form-control"></input>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="GuestWasHere" /> @Html.DisplayNameFor(model => model.GuestWasHere)
-                    </label>
-                </div>
+            <div>
+                <input type="button" value="Check Availability" onclick="checkAvailability()" class="btn btn-info" />
             </div>
+            <br />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input id="submitRent" type="submit" value="Save" class="btn btn-success" style="visibility:hidden" />
             </div>
         </form>
     </div>
@@ -56,6 +53,7 @@
 @*Calculates the Price for the specified Days*@
 <script type="text/javascript">
     function calculatePrice() {
+        document.getElementById("submitRent").style.visibility = "hidden";
         var from = document.getElementById("From").value;
         var to = document.getElementById("To").value;
         if (from == null || from == "" || to == null || to == "") {
@@ -77,5 +75,24 @@
             document.getElementById("PricePerDays").value = result;
             
         }
+
+        
+    }
+
+    function checkAvailability() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.status == 400) {
+                document.getElementById("submitRent").style.visibility = "hidden";
+            }
+            else {
+                document.getElementById("submitRent").style.visibility = "visible";
+            }
+
+        };
+        var fromD = document.getElementById("From").value;
+        var toD = document.getElementById("To").value;
+        xhttp.open("GET", "/Rents/CheckAvailability?fromDate=" + fromD + "&toDate=" + toD, true);
+        xhttp.send();
     }
 </script>

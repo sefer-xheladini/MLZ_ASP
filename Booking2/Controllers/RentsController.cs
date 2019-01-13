@@ -92,11 +92,14 @@ namespace Booking2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("RentId,BuildingId,UserId,From,To,PricePerDays,GuestWasHere")] Rent rent)
         {
-            if (id != rent.RentId)
+            rent.GuestWasHere = true;
+            if(rent.From > rent.To)
             {
-                return NotFound();
+                DateTime temp = rent.From;
+                rent.From = rent.To;
+                rent.To = temp;
             }
-
+            rent.BuildingId = id;
             if (ModelState.IsValid)
             {
                 try
@@ -119,7 +122,7 @@ namespace Booking2.Controllers
             }
             ViewData["BuildingId"] = new SelectList(_context.Building, "BuildingId", "BuildingId", rent.BuildingId);
             ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserId", rent.UserId);
-            return View(rent);
+            return View("Views/Buildings/Index.cshtml");
         }
 
         // GET: Rents/Delete/5
@@ -152,6 +155,42 @@ namespace Booking2.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> CheckAvailability(DateTime fromDate, DateTime toDate)
+        {
+            if (fromDate > toDate)
+            {
+                DateTime temp = fromDate;
+                fromDate = toDate;
+                toDate = temp;
+            }
+            List<DateTime> allRequestedDates = new List<DateTime>();
+            List<DateTime> reservatedDates = new List<DateTime>();
+            for (DateTime date = fromDate; date <= toDate; date = date.AddDays(1))
+            {
+                allRequestedDates.Add(date);
+            }
+
+            List<Rent> rents = _context.Rent.ToList();
+            foreach(var rent in rents)
+            {
+                for (DateTime date = rent.From; date <= rent.To; date = date.AddDays(1))
+                {
+                    reservatedDates.Add(date);
+                }
+            }
+            List<DateTime> duplicates = reservatedDates.Intersect(allRequestedDates).ToList();
+            if(duplicates.Count == 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+        
 
         private bool RentExists(int id)
         {
